@@ -1,0 +1,87 @@
+WHAT IT IS
+A stack is last in, first out (LIFO): you add and remove at the same end. A queue is first in, first out (FIFO): you add at the back and remove from the front. A monotonic stack is a stack that always stays sorted, used for "next greater element" questions.
+
+REAL-LIFE ANALOGY
+Stack: a pile of plates, you take the top one. Queue: people in a line at a ticket counter, the first person is served first. Undo in a text editor is a stack. A printer waiting list is a queue.
+
+KEY TERMS
+- push and pop: add and remove on top of a stack
+- peek: look at the top without removing it
+- enqueue and dequeue: add at the back and remove from the front of a queue
+- Deque: a double-ended queue, add and remove at both ends
+- Monotonic stack: a stack whose values only increase or only decrease
+
+WHEN TO USE IT
+- Matching brackets or nested structures (Valid Parentheses)
+- Undo, backtracking, evaluating expressions
+- "Next greater or smaller element" (monotonic stack)
+- Level by level processing, BFS, scheduling (queue)
+- Sliding window maximum (deque)
+
+CODE: VALID PARENTHESES
+Deque<Character> stack = new ArrayDeque<>();
+for (char c : s.toCharArray()) {
+    if (c == '(' || c == '{' || c == '[') {
+        stack.push(c);
+    } else {
+        if (stack.isEmpty()) {
+            return false;
+        }
+        char open = stack.pop();
+        if ((c == ')' && open != '(') || (c == '}' && open != '{') || (c == ']' && open != '[')) {
+            return false;
+        }
+    }
+}
+return stack.isEmpty();
+
+CODE: NEXT GREATER ELEMENT (MONOTONIC STACK)
+int[] answer = new int[nums.length];
+Deque<Integer> stack = new ArrayDeque<>();
+for (int i = 0; i < nums.length; i++) {
+    while (!stack.isEmpty() && nums[stack.peek()] < nums[i]) {
+        int idx = stack.pop();
+        answer[idx] = i - idx;
+    }
+    stack.push(i);
+}
+return answer;
+
+WORKED EXAMPLE
+Check the string "{[]}".
+  read {   push      stack: {
+  read [   push      stack: { [
+  read ]   pop [     matches ], ok     stack: {
+  read }   pop {     matches }, ok     stack: empty
+Stack is empty at the end, so the brackets are valid. For "{[}" the last pop would give [ for }, a mismatch.
+
+PATTERNS YOU WILL MEET
+- Matching: Valid Parentheses, Remove Outer Parentheses
+- Monotonic stack: Daily Temperatures, Next Greater Element, Largest Rectangle in Histogram
+- Stack with extra info: Min Stack
+- Two stacks or two queues: Implement Queue using Stacks
+- Deque: Sliding Window Maximum
+
+COMPLEXITY
+push, pop, peek, enqueue and dequeue are all O(1). A monotonic stack is O(n) in total because each item is pushed once and popped once.
+
+COMMON MISTAKES
+- Popping from an empty stack (always check isEmpty first)
+- Using the old Stack class, ArrayDeque is the modern choice in Java
+- Using LinkedList or ArrayList remove(0) as a queue, that is O(n)
+- Forgetting leftover items in the stack at the end
+
+INTERVIEW TIPS
+- Say "the most recent unmatched item matters, so a stack fits"
+- For monotonic stack, store indexes, not values, then you can read both
+- Know that BFS uses a queue and DFS uses a stack (or recursion)
+
+PRACTICE ROADMAP
+1. Easy: Valid Parentheses, Implement Queue using Stacks
+2. Medium: Min Stack, Daily Temperatures, Evaluate Reverse Polish Notation
+3. Hard: Largest Rectangle in Histogram, Sliding Window Maximum
+
+QUICK RECAP
+- Stack: last in, first out. Queue: first in, first out
+- Nested or matching problems mean stack
+- Next greater element means monotonic stack

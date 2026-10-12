@@ -1,0 +1,73 @@
+WHAT IT IS
+An array stores items in one row of memory, so you can jump to any item by its index in O(1). A hash map (HashMap in Java) stores key-value pairs and finds a key in O(1) on average. Together they solve most "find, count or group" questions.
+
+REAL-LIFE ANALOGY
+An array is a row of numbered lockers: locker 5 is found instantly. A hash map is a phone contacts list: you type a name and the phone number appears, you never scroll through everyone.
+
+KEY TERMS
+- Index: the position of an item in an array, starting at 0
+- Key and value: a hash map looks up the value using the key
+- Frequency map: a map from item to how many times it appears
+- Set: like a map with only keys, used to ask "have I seen this?"
+- Prefix sum: running total, so any range sum is one subtraction
+
+WHEN TO USE IT
+- "Have I seen this before?" or "does a duplicate exist?" means a HashSet
+- "Count how many times" means a HashMap of item to count
+- "Find two items that add up to a target" means a map of seen values
+- "Group things that are alike" means a map with a key that is the same for alike items
+- Brute force uses two nested loops (O(n^2)) and you want O(n)
+
+CODE: TWO SUM WITH A HASH MAP
+Map<Integer, Integer> seen = new HashMap<>();
+for (int i = 0; i < nums.length; i++) {
+    int need = target - nums[i];
+    if (seen.containsKey(need)) {
+        return new int[] { seen.get(need), i };
+    }
+    seen.put(nums[i], i);
+}
+return new int[] {};
+
+CODE: FREQUENCY COUNT
+Map<Character, Integer> count = new HashMap<>();
+for (char c : s.toCharArray()) {
+    count.put(c, count.getOrDefault(c, 0) + 1);
+}
+
+WORKED EXAMPLE
+Two Sum with nums = [2, 7, 11, 15] and target = 9. Walk one number at a time.
+  i=0  value=2  need=7  seen={}        7 not found, store 2   seen={2:0}
+  i=1  value=7  need=2  seen={2:0}     2 FOUND at index 0
+Answer: [0, 1]. We looked at each number once, so it is O(n) instead of O(n^2).
+
+PATTERNS YOU WILL MEET
+- Seen set: Contains Duplicate, Longest Consecutive Sequence
+- Frequency map: Valid Anagram, Top K Frequent Elements
+- Group by a signature: Group Anagrams (sort the letters of each word and use that as the key)
+- Prefix sums: Subarray Sum Equals K, Product of Array Except Self
+- Complement lookup: Two Sum and its variations
+
+COMPLEXITY
+Array access O(1). Map put and get O(1) average, O(n) worst case. One pass with a map is O(n) time and O(n) space. You trade extra memory for speed.
+
+COMMON MISTAKES
+- Putting the current number in the map before checking for its partner (breaks when the answer uses the same number twice)
+- Using == to compare Integer objects, use equals instead
+- Forgetting that two different strings can be anagrams only if their counts match
+- Modifying a list while looping over it
+
+INTERVIEW TIPS
+- Say the brute force first (nested loops), then say "I can use a hash map to make it O(n)"
+- Ask: can the array have duplicates, negatives, or be empty?
+- Mention the space cost out loud, interviewers like it
+
+PRACTICE ROADMAP
+1. Easy: Contains Duplicate, Valid Anagram, Two Sum
+2. Medium: Group Anagrams, Top K Frequent Elements, Product of Array Except Self
+3. Hard-ish: Longest Consecutive Sequence, Subarray Sum Equals K
+
+QUICK RECAP
+- Array gives instant access by index, hash map gives instant lookup by key
+- Check the map first, then store the current item
+- Trading memory for speed turns O(n^2) into O(n)

@@ -1,0 +1,88 @@
+WHAT IT IS
+A tree is a set of nodes connected from one root downwards. In a binary tree each node has at most two children, left and right. A Binary Search Tree (BST) keeps order: everything in the left subtree is smaller than the node and everything in the right subtree is larger.
+
+REAL-LIFE ANALOGY
+A family tree or a company chart: one person at the top, each person has people below. A BST is like a "guess the number" game written as a tree: smaller goes left, bigger goes right.
+
+KEY TERMS
+- Root, parent, child, leaf: the top node, a node above, a node below, a node with no children
+- Height or depth: the number of levels
+- Subtree: a node together with everything below it
+- Traversal: a way to visit every node (preorder, inorder, postorder, level order)
+- Inorder of a BST: visits the values in sorted order
+
+WHEN TO USE IT
+- Almost every tree question, the first idea is recursion: solve left, solve right, combine
+- Depth, diameter, balanced check, same tree, invert tree
+- Level by level questions (use a queue, BFS)
+- BST questions: search, insert, validate, k-th smallest, lowest common ancestor
+
+CODE: MAXIMUM DEPTH (RECURSION)
+int maxDepth(TreeNode root) {
+    if (root == null) {
+        return 0;
+    }
+    int left = maxDepth(root.left);
+    int right = maxDepth(root.right);
+    return 1 + Math.max(left, right);
+}
+
+CODE: LEVEL ORDER TRAVERSAL (BFS WITH A QUEUE)
+List<List<Integer>> result = new ArrayList<>();
+Queue<TreeNode> queue = new LinkedList<>();
+if (root != null) {
+    queue.add(root);
+}
+while (!queue.isEmpty()) {
+    int size = queue.size();
+    List<Integer> level = new ArrayList<>();
+    for (int i = 0; i < size; i++) {
+        TreeNode node = queue.poll();
+        level.add(node.val);
+        if (node.left != null) {
+            queue.add(node.left);
+        }
+        if (node.right != null) {
+            queue.add(node.right);
+        }
+    }
+    result.add(level);
+}
+return result;
+
+WORKED EXAMPLE
+Tree: root 8, with left child 3 (children 1 and 6) and right child 10 (right child 14).
+Inorder (left, node, right): 1, 3, 6, 8, 10, 14. That is sorted, which proves it is a valid BST.
+Maximum depth: the leaf 1 gives 1, node 3 gives 2, root 8 gives 3, so depth is 3.
+Search for 6 in the BST: 6 < 8 go left, 6 > 3 go right, found. Only 3 nodes checked instead of 6.
+
+PATTERNS YOU WILL MEET
+- Simple recursion: Maximum Depth, Invert Binary Tree, Same Tree, Symmetric Tree
+- Return a value up and track a global answer: Diameter of Binary Tree
+- BFS by levels: Level Order Traversal, Right Side View
+- BST rules: Validate BST, Kth Smallest in BST, Lowest Common Ancestor
+- Build a tree: Construct Tree from Preorder and Inorder
+
+COMPLEXITY
+Visiting every node is O(n). Recursion uses O(h) stack space where h is the height: O(log n) for a balanced tree, O(n) for a skewed tree. BST search, insert and delete are O(h).
+
+COMMON MISTAKES
+- Forgetting the null base case
+- Validating a BST by comparing only with the parent (you must pass down a min and a max range)
+- Mixing up depth (counted from the root) and height (counted from the leaf)
+- Not noticing that a skewed BST becomes a linked list and loses its speed
+
+INTERVIEW TIPS
+- Ask: is it a binary tree or a BST? Balanced?
+- Start with "what do I need from the left, and from the right?"
+- Know all four traversals and say which data structure each uses
+
+PRACTICE ROADMAP
+1. Easy: Maximum Depth, Invert Binary Tree, Same Tree
+2. Medium: Level Order Traversal, Validate BST, Lowest Common Ancestor, Kth Smallest in BST
+3. Hard: Binary Tree Maximum Path Sum, Serialize and Deserialize Binary Tree
+
+QUICK RECAP
+- Solve left, solve right, combine
+- BFS uses a queue, DFS uses recursion
+- Inorder of a BST is sorted

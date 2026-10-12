@@ -1,0 +1,94 @@
+WHAT IT IS
+A graph is a set of nodes (vertices) connected by edges. It models networks: cities and roads, people and friendships, courses and prerequisites. BFS explores level by level, DFS goes as deep as possible before backing up.
+
+REAL-LIFE ANALOGY
+BFS: a ripple spreading on water, it reaches all nodes 1 step away, then 2 steps away. DFS: exploring a cave, you follow one tunnel to its end, then come back and try the next tunnel.
+
+KEY TERMS
+- Vertex and edge: a node and a connection between two nodes
+- Directed and undirected: an edge with a direction, or a two-way edge
+- Adjacency list: for each node, the list of its neighbours (the usual way to store a graph)
+- Visited set: remembers nodes already seen, so you never loop forever
+- Connected component: a group of nodes that can reach each other
+
+WHEN TO USE IT
+- Shortest path when every edge costs the same (BFS)
+- Count islands, count components, flood fill (DFS or BFS on a grid)
+- Detect a cycle, or a valid course schedule (topological sort)
+- Clone a graph, or check if two nodes are connected
+- Any "grid with moves" puzzle
+
+CODE: BFS (SHORTEST PATH IN STEPS)
+Queue<Integer> queue = new LinkedList<>();
+boolean[] visited = new boolean[n];
+queue.add(start);
+visited[start] = true;
+int steps = 0;
+while (!queue.isEmpty()) {
+    int size = queue.size();
+    for (int i = 0; i < size; i++) {
+        int node = queue.poll();
+        if (node == target) {
+            return steps;
+        }
+        for (int next : graph.get(node)) {
+            if (!visited[next]) {
+                visited[next] = true;
+                queue.add(next);
+            }
+        }
+    }
+    steps++;
+}
+return -1;
+
+CODE: DFS ON A GRID (NUMBER OF ISLANDS)
+void dfs(char[][] grid, int r, int c) {
+    if (r < 0 || c < 0 || r >= grid.length || c >= grid[0].length || grid[r][c] != '1') {
+        return;
+    }
+    grid[r][c] = '0';
+    dfs(grid, r + 1, c);
+    dfs(grid, r - 1, c);
+    dfs(grid, r, c + 1);
+    dfs(grid, r, c - 1);
+}
+
+WORKED EXAMPLE
+Graph: A-B, A-C, B-D, C-E, D-F, E-F. BFS from A.
+  level 0   visit A                  queue: B C
+  level 1   visit B, C               queue: D E
+  level 2   visit D, E               queue: F
+  level 3   visit F                  done
+F is reached in 3 steps, and BFS guarantees it is the shortest way because it checks all nearer nodes first. Number of Islands: start a DFS on every land cell that is still '1', sink the whole island to '0', and count how many times you had to start.
+
+PATTERNS YOU WILL MEET
+- Grid DFS or BFS: Number of Islands, Flood Fill, Rotting Oranges (multi-source BFS)
+- Connected components: Number of Connected Components
+- Cycle and order: Course Schedule (topological sort)
+- Copy a graph: Clone Graph
+- Shortest path with weights: Dijkstra (uses a heap)
+
+COMPLEXITY
+BFS and DFS both visit every vertex and every edge once: O(V + E) time and O(V) space for the visited set and the queue or stack. A grid with R rows and C columns is O(R x C).
+
+COMMON MISTAKES
+- Not marking nodes as visited, which causes endless loops
+- Marking visited when you take a node out of the queue instead of when you add it (creates duplicates)
+- Forgetting that the graph can be disconnected, so loop over all start nodes
+- Going out of the grid bounds
+
+INTERVIEW TIPS
+- Ask: directed or undirected? weighted? can there be cycles?
+- Say "shortest path with equal weights means BFS"
+- Draw a small graph and write the queue after each level
+
+PRACTICE ROADMAP
+1. Easy: Flood Fill, Find if Path Exists in Graph
+2. Medium: Number of Islands, Clone Graph, Rotting Oranges, Course Schedule
+3. Hard: Word Ladder, Alien Dictionary
+
+QUICK RECAP
+- Mark it visited, then visit its neighbours
+- BFS (queue) for the shortest path, DFS (recursion) for exploring everything
+- O(V + E) for both

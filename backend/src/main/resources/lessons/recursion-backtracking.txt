@@ -1,0 +1,75 @@
+WHAT IT IS
+Recursion means a function solves a problem by calling itself on a smaller version of the same problem. Backtracking is recursion that tries a choice, goes deeper, and if it fails (or after recording a result) undoes the choice and tries the next one.
+
+REAL-LIFE ANALOGY
+Walking a maze. At every fork you pick a path. If you hit a dead end you walk back to the last fork and take another path. You never forget where you have not tried yet.
+
+KEY TERMS
+- Base case: the smallest problem, answered directly, it stops the recursion
+- Recursive case: break the problem into a smaller one and call yourself
+- Call stack: where Java remembers all the unfinished calls
+- State: what you have chosen so far (the current path)
+- Pruning: stop a branch early when it cannot lead to an answer
+
+WHEN TO USE IT
+- "Generate all" subsets, permutations, combinations, parentheses
+- "Find all paths" in a grid or graph
+- Puzzles: N-Queens, Sudoku, word search
+- A problem that clearly contains a smaller copy of itself (tree problems, factorial)
+
+CODE: THE BACKTRACKING TEMPLATE (SUBSETS)
+void backtrack(int start, int[] nums, List<Integer> path, List<List<Integer>> result) {
+    result.add(new ArrayList<>(path));
+    for (int i = start; i < nums.length; i++) {
+        path.add(nums[i]);
+        backtrack(i + 1, nums, path, result);
+        path.remove(path.size() - 1);
+    }
+}
+
+CODE: PLAIN RECURSION (FACTORIAL)
+int factorial(int n) {
+    if (n <= 1) {
+        return 1;
+    }
+    return n * factorial(n - 1);
+}
+
+WORKED EXAMPLE
+All subsets of [1, 2]. Start with path = [] and record it.
+  choose 1   path=[1]     record [1]
+    choose 2   path=[1,2]   record [1,2]   then UNDO 2   path=[1]
+  UNDO 1   path=[]
+  choose 2   path=[2]     record [2]       then UNDO 2   path=[]
+Result: [], [1], [1,2], [2]. The pattern is always: choose, explore, undo.
+
+PATTERNS YOU WILL MEET
+- Subsets: Subsets, Subsets II (skip duplicates)
+- Permutations: Permutations (use a used[] array)
+- Combinations: Combination Sum (reuse the same number by calling with i, not i + 1)
+- Grid search: Word Search (mark the cell visited, then unmark)
+- Constraint puzzles: N-Queens, Sudoku Solver
+
+COMPLEXITY
+Backtracking explores a decision tree. Subsets take O(2^n) and permutations O(n!). Space is the depth of the recursion, usually O(n).
+
+COMMON MISTAKES
+- Missing or wrong base case, which causes StackOverflowError
+- Forgetting the undo step, so choices leak into the next branch
+- Adding the same list object to the result (always copy it with new ArrayList<>(path))
+- Not skipping duplicate values when the input has duplicates
+
+INTERVIEW TIPS
+- Say the three words aloud: choose, explore, undo
+- Draw the decision tree for a tiny input like [1, 2, 3]
+- Mention pruning: "I stop early when the sum is already too big"
+
+PRACTICE ROADMAP
+1. Easy: Fibonacci, Power of Two (as warm-up recursion)
+2. Medium: Subsets, Permutations, Combination Sum, Word Search
+3. Hard: N-Queens, Sudoku Solver
+
+QUICK RECAP
+- Every recursion needs a base case
+- Backtracking = choose, explore, undo
+- Copy the path when you save a result

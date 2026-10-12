@@ -1,0 +1,82 @@
+WHAT IT IS
+Binary search finds an item in sorted data by checking the middle and throwing away half of the remaining items each time. It also works on any problem where the answer changes from "no" to "yes" at one point.
+
+REAL-LIFE ANALOGY
+Guessing a number from 1 to 100: you say 50, you are told "higher", you say 75, and so on. You find the number in at most 7 guesses instead of 100.
+
+KEY TERMS
+- lo and hi: the current search range, both ends included
+- mid: the middle index, computed as lo + (hi - lo) / 2
+- Sorted: required, otherwise "discard half" is not safe
+- Search on answer: binary search over possible answers instead of array positions
+- Monotonic: the check result only flips once, from false to true
+
+WHEN TO USE IT
+- A sorted array and you need a value, a position, or where to insert
+- A rotated sorted array (one half is always sorted)
+- "Find the minimum speed, capacity or time such that ..." (search on answer)
+- The input is huge and O(n) is too slow, you need O(log n)
+
+CODE: CLASSIC BINARY SEARCH
+int lo = 0, hi = nums.length - 1;
+while (lo <= hi) {
+    int mid = lo + (hi - lo) / 2;
+    if (nums[mid] == target) {
+        return mid;
+    }
+    if (nums[mid] < target) {
+        lo = mid + 1;
+    } else {
+        hi = mid - 1;
+    }
+}
+return -1;
+
+CODE: SEARCH ON THE ANSWER (KOKO EATING BANANAS)
+int lo = 1, hi = maxPile;
+while (lo < hi) {
+    int mid = lo + (hi - lo) / 2;
+    if (canFinish(piles, mid, h)) {
+        hi = mid;
+    } else {
+        lo = mid + 1;
+    }
+}
+return lo;
+
+WORKED EXAMPLE
+Array [1, 3, 5, 7, 9, 11, 13, 15], target 11.
+  lo=0 hi=7   mid=3  nums[3]=7    7 < 11, so lo = 4
+  lo=4 hi=7   mid=5  nums[5]=11   FOUND at index 5
+Two steps for 8 numbers. For 1,000,000 numbers it takes only about 20 steps.
+
+PATTERNS YOU WILL MEET
+- Plain search: Binary Search, Search Insert Position
+- Rotated array: Search in Rotated Sorted Array, Find Minimum in Rotated Sorted Array
+- Search on answer: Koko Eating Bananas, Capacity to Ship Packages
+- Boundaries: first and last position of an element
+- 2D matrix: treat the matrix as one long sorted array
+
+COMPLEXITY
+Time O(log n) because the range halves each step. Space O(1) for the loop version.
+
+COMMON MISTAKES
+- Writing (lo + hi) / 2, which can overflow for big numbers
+- Infinite loops: using lo = mid or hi = mid with the wrong loop condition
+- Mixing the "lo <= hi" style with the "lo < hi" style in one solution
+- Running it on unsorted data
+
+INTERVIEW TIPS
+- Decide first: "what are lo and hi, and what does mid test?"
+- For search on answer, write the yes/no check function separately and test it alone
+- Mention the invariant: the answer is always inside [lo, hi]
+
+PRACTICE ROADMAP
+1. Easy: Binary Search, Search Insert Position
+2. Medium: Search in Rotated Sorted Array, Find Minimum in Rotated Sorted Array, Koko Eating Bananas
+3. Hard: Median of Two Sorted Arrays
+
+QUICK RECAP
+- Check the middle, discard half
+- Keep one style of loop and be careful with the boundaries
+- Not only for arrays: any yes/no switch can be binary searched

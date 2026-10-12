@@ -1,0 +1,75 @@
+WHAT IT IS
+A heap is a tree that always keeps the smallest item (min-heap) or the largest item (max-heap) at the top. In Java it is the PriorityQueue class. You can read the top in O(1) and add or remove in O(log n).
+
+REAL-LIFE ANALOGY
+An emergency room: patients are not served in arrival order, the most urgent patient is always next. When a new patient arrives they are placed by urgency, and the boss (top priority) is always easy to find.
+
+KEY TERMS
+- Min-heap: the parent is always smaller than its children, the smallest is on top
+- Max-heap: the parent is always larger, the largest is on top
+- offer and poll: add an item, remove the top item
+- peek: look at the top without removing it
+- Heap size k: keep only the k best items so far
+
+WHEN TO USE IT
+- "K largest", "K smallest" or "K most frequent" items
+- "Kth largest element" in an array or a stream
+- Merge many sorted lists
+- Repeatedly take the smallest or largest (scheduling, Dijkstra, running median)
+- You do not need a fully sorted result, only the best few
+
+CODE: KTH LARGEST WITH A MIN-HEAP OF SIZE K
+PriorityQueue<Integer> heap = new PriorityQueue<>();
+for (int num : nums) {
+    heap.offer(num);
+    if (heap.size() > k) {
+        heap.poll();
+    }
+}
+return heap.peek();
+
+CODE: MAX-HEAP AND A CUSTOM ORDER
+PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Collections.reverseOrder());
+PriorityQueue<int[]> byFirst = new PriorityQueue<>((a, b) -> a[0] - b[0]);
+maxHeap.offer(5);
+byFirst.offer(new int[] { 3, 10 });
+
+WORKED EXAMPLE
+Find the 2nd largest in [3, 1, 5, 12, 2]. Keep a min-heap of size 2.
+  add 3    heap {3}
+  add 1    heap {1, 3}
+  add 5    heap {1, 3, 5} too big, remove smallest 1   heap {3, 5}
+  add 12   heap {3, 5, 12} too big, remove 3           heap {5, 12}
+  add 2    heap {2, 5, 12} too big, remove 2           heap {5, 12}
+The top of the heap is 5, the 2nd largest. Sorting everything would cost O(n log n), this costs O(n log k).
+
+PATTERNS YOU WILL MEET
+- Top K with a heap of size k: Kth Largest Element, Top K Frequent Elements
+- Two heaps: Find Median from Data Stream (a max-heap for the small half, a min-heap for the large half)
+- Merge sorted inputs: Merge k Sorted Lists
+- Greedy with a heap: Task Scheduler, Last Stone Weight
+- Shortest path: Dijkstra uses a min-heap
+
+COMPLEXITY
+peek O(1). offer and poll O(log n). Building a heap from n items one by one is O(n log n). A size-k heap over n items is O(n log k) time and O(k) space.
+
+COMMON MISTAKES
+- Using a max-heap when a min-heap of size k is the right tool (and the other way round)
+- Forgetting that PriorityQueue is a min-heap by default in Java
+- Iterating over a PriorityQueue and expecting sorted order (only poll gives order)
+- Subtracting integers in a comparator, which can overflow (use Integer.compare)
+
+INTERVIEW TIPS
+- Say "I only need the top k, so a heap of size k is better than sorting"
+- For the median stream, draw the two heaps and the balance rule
+- Mention that a heap is stored in an array: children of i are 2i+1 and 2i+2
+
+PRACTICE ROADMAP
+1. Easy: Last Stone Weight, Kth Largest Element in a Stream
+2. Medium: Kth Largest Element in an Array, Top K Frequent Elements, K Closest Points to Origin
+3. Hard: Merge k Sorted Lists, Find Median from Data Stream
+
+QUICK RECAP
+- The boss is always on top
+- Top K means a heap of size K
+- offer and poll cost O(log n), peek costs O(1)
